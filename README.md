@@ -446,6 +446,23 @@ sudo apt install libhiredis-dev
 
 ---
 
+# 5.1️⃣ Install Crow (single-header)
+
+Crow is a header-only C++ microframework. Copy the single header `crow_all.h` into the `external/` folder.
+
+Linux/macOS (quick):
+
+```bash
+mkdir -p external
+curl -sSL https://raw.githubusercontent.com/CrowCpp/Crow/master/include/crow_all.h -o external/crow_all.h
+```
+
+Windows (quick): download `crow_all.h` from the Crow repo and place it into the `external\` folder.
+
+If you prefer package managers, install via `vcpkg` or your distro packages and update include paths accordingly.
+
+---
+
 # 6️⃣ Build Project
 
 ```bash
