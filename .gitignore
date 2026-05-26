@@ -1,4 +1,58 @@
+# ============================================================
+# .gitignore
+# ------------------------------------------------------------
+# Tells Git which files NOT to track.
+# We don't want to commit compiled binaries, temp files,
+# or machine-specific configs to GitHub.
+# ============================================================
+
+# ============================================================
+# BUILD OUTPUT
+# ------------
+# Compiled files don't belong in version control.
+# Everyone rebuilds from source.
+# ============================================================
 build/
-*.exe
 *.o
+*.exe
+rate_limiter
+
+# ============================================================
+# CROW VENDOR (optional — remove these 2 lines if you WANT
+# to commit crow_all.h so others don't need to download it)
+# ============================================================
+# vendor/crow_all.h
+
+# ============================================================
+# IDE / EDITOR FILES
+# ============================================================
 .vscode/
+.idea/
+*.code-workspace
+*.suo
+*.user
+.DS_Store       # macOS folder metadata
+Thumbs.db       # Windows thumbnail cache
+
+# ============================================================
+# CMAKE GENERATED FILES
+# ============================================================
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+Makefile
+*.cmake
+
+# ============================================================
+# LOGS
+# ============================================================
+*.log
+logs/
+
+# ============================================================
+# ENVIRONMENT FILES
+# (Never commit secrets or passwords!)
+# ============================================================
+.env
+.env.local
+config.local.*
