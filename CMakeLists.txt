@@ -7,6 +7,7 @@ include_directories(
     ${CMAKE_SOURCE_DIR}/include
     ${CMAKE_SOURCE_DIR}/external
     ${CMAKE_SOURCE_DIR}/external/hiredis
+    ${CMAKE_SOURCE_DIR}/external/crow
 )
 
 add_executable(rate_limiter src/main.cpp src/rate_limiter.cpp)
