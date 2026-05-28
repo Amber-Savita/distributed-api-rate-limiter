@@ -102,7 +102,7 @@ This project demonstrates the foundational architecture behind those systems.
 
 ---
 
-# 🧠 Core Engineering Concepts
+# 🧠 Core-Engineering-Concepts
 
 This project demonstrates:
 
