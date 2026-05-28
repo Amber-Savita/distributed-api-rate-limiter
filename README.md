@@ -391,102 +391,183 @@ Counter resets automatically
 
 # 🛠️ Installation & Setup
 
+## Quick Start with Docker (Recommended) ⭐
+
+The easiest way to run this project is using Docker. It includes Redis and all dependencies pre-configured.
+
+### Prerequisites
+- Docker installed on your system
+
+### Steps
+
 # 1️⃣ Clone Repository
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/distributed-rate-limiter.git
+git clone https://github.com/Amber-Savita/distributed-api-rate-limiter.git
+cd distributed-api-rate-limiter
 ```
 
 ---
 
-# 2️⃣ Enter Project
+# 2️⃣ Build Docker Image
 
 ```bash
-cd distributed-rate-limiter
+docker build -t rate-limiter:latest .
 ```
 
 ---
 
-# 3️⃣ Install Redis
+# 3️⃣ Run Container
 
-## Ubuntu/Linux
+```bash
+docker run -d --name rate-limiter -p 18080:18080 -p 6379:6379 rate-limiter:latest
+```
 
+**Options:**
+- `-d`: Run in detached mode (background)
+- `--name rate-limiter`: Container name for easy reference
+- `-p 18080:18080`: Map API port
+- `-p 6379:6379`: Map Redis port
+
+---
+
+# 4️⃣ Verify Server is Running
+
+```bash
+docker logs rate-limiter
+```
+
+Expected output:
+```text
+Starting distributed rate limiter...
+Starting server on :18080
+(2026-05-28 13:07:44) [INFO    ] Crow/master server is running at http://0.0.0.0:18080 using 8 threads
+```
+
+---
+
+# 5️⃣ Test the API
+
+```bash
+# Test with 7 requests (first 5 allowed, 6-7 blocked)
+python -c "
+import urllib.request, json
+
+url = 'http://localhost:18080/request'
+print('Testing Rate Limiter API...\n')
+
+for i in range(7):
+    data = json.dumps({'user': 'test_user'}).encode('utf-8')
+    req = urllib.request.Request(url, data=data, headers={'Content-Type': 'application/json'}, method='POST')
+    try:
+        response = urllib.request.urlopen(req)
+        result = response.read().decode('utf-8')
+        print(f'Request {i+1}: Status {response.status} - {result}')
+    except urllib.error.HTTPError as e:
+        result = e.read().decode('utf-8')
+        print(f'Request {i+1}: Status {e.code} - {result}')
+"
+```
+
+**Expected Output:**
+```text
+Testing Rate Limiter API...
+
+Request 1: Status 200 - {"status":"allowed"}
+Request 2: Status 200 - {"status":"allowed"}
+Request 3: Status 200 - {"status":"allowed"}
+Request 4: Status 200 - {"status":"allowed"}
+Request 5: Status 200 - {"status":"allowed"}
+Request 6: Status 429 - {"status":"blocked"}
+Request 7: Status 429 - {"status":"blocked"}
+```
+
+---
+
+# 6️⃣ Stop Container
+
+```bash
+docker stop rate-limiter
+docker rm rate-limiter
+```
+
+---
+
+---
+
+# Alternative: Local Build (Linux/macOS)
+
+If you prefer to build locally without Docker:
+
+## Prerequisites
+- C++17 compiler (g++, clang)
+- CMake 3.5+
+- libhiredis-dev
+- libasio-dev
+
+## Steps
+
+# 1️⃣ Install Dependencies
+
+**Ubuntu/Debian:**
 ```bash
 sudo apt update
-sudo apt install redis-server
+sudo apt install build-essential cmake libhiredis-dev libasio-dev
+```
+
+**macOS (with Homebrew):**
+```bash
+brew install cmake hiredis asio
 ```
 
 ---
 
-# 4️⃣ Start Redis
+# 2️⃣ Start Redis
 
 ```bash
+# Ubuntu/Linux
 redis-server
+
+# macOS
+brew services start redis
 ```
 
-Verify:
-
+Verify Redis is running:
 ```bash
 redis-cli ping
-```
-
-Expected:
-
-```text
-PONG
+# Expected: PONG
 ```
 
 ---
 
-# 5️⃣ Install hiredis
+# 3️⃣ Build Project
 
 ```bash
-sudo apt install libhiredis-dev
-```
-
----
-
-# 5.1️⃣ Install Crow (single-header)
-
-Crow is a header-only C++ microframework. Copy the single header `crow_all.h` into the `external/` folder.
-
-Linux/macOS (quick):
-
-```bash
-mkdir -p external
-curl -sSL https://raw.githubusercontent.com/CrowCpp/Crow/master/include/crow_all.h -o external/crow_all.h
-```
-
-Windows (quick): download `crow_all.h` from the Crow repo and place it into the `external\` folder.
-
-If you prefer package managers, install via `vcpkg` or your distro packages and update include paths accordingly.
-
----
-
-# 6️⃣ Build Project
-
-```bash
-mkdir build
+mkdir -p build
 cd build
-
 cmake ..
-make
+cmake --build .
 ```
 
 ---
 
-# 7️⃣ Run Server
+# 4️⃣ Run Server
 
 ```bash
 ./rate_limiter
 ```
 
-Expected:
-
+Expected output:
 ```text
-Connected to Redis!
-Crow server is running on port 18080
+Starting server on :18080
+(timestamp) [INFO    ] Crow/master server is running at http://0.0.0.0:18080 using 8 threads
 ```
+
+---
+
+# 5️⃣ Test the API
+
+Use the same Python test script from the Docker section above.
 
 ---
 
