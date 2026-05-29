@@ -105,7 +105,6 @@ This project demonstrates the foundational architecture behind those systems.
 # 🧠 Core-Engineering-Concepts
 
 This project demonstrates:
-
 | Concept | Description |
 |---|---|
 | REST APIs | HTTP communication between client and server |
@@ -467,6 +466,12 @@ for i in range(7):
         result = e.read().decode('utf-8')
         print(f'Request {i+1}: Status {e.code} - {result}')
 "
+```
+
+Or run the included helper script:
+
+```bash
+python ./scripts/test_api.py
 ```
 
 **Expected Output:**
